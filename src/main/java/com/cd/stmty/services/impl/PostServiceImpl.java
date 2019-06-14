@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component
 public class PostServiceImpl implements PostService {
 
@@ -25,7 +27,7 @@ public class PostServiceImpl implements PostService {
     public Page<Post> getAll(BaseListRequest request) {
         try {
             LOGGER.info(Const.LOG_BEGIN_SERVICE + UriParam.LIST);
-            PageRequest pageRequest = request.createPageRequest(UriParam.POST_ID);
+            PageRequest pageRequest = request.createPageRequest(UriParam.ID);
             Page<Post> posts = postRepository.findAll(pageRequest);
             LOGGER.debug(posts.toString());
             return posts;
@@ -38,6 +40,8 @@ public class PostServiceImpl implements PostService {
     public Post insert(Post post) {
         try {
             LOGGER.info(Const.LOG_BEGIN_SERVICE + UriParam.INSERT);
+            post.setCreateDate(new Date());
+            post.setUpdateDate(new Date());
             Post result = postRepository.save(post);
             LOGGER.debug(result.toString());
             return result;
@@ -50,6 +54,7 @@ public class PostServiceImpl implements PostService {
     public Post update(Post post) {
         try {
             LOGGER.info(Const.LOG_BEGIN_SERVICE + UriParam.UPDATE);
+            post.setUpdateDate(new Date());
             Post result = postRepository.save(post);
             LOGGER.debug(result.toString());
             return result;

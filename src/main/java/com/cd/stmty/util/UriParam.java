@@ -7,6 +7,7 @@ public interface UriParam {
      */
     String FORWARD_SLASH = "/";
     String LIST = "";
+    String ID = "id";
     String GET = "/{id}";
     String SEARCH = "/search";
     String INSERT = "/insert";
@@ -29,7 +30,6 @@ public interface UriParam {
      * URL Post
      */
     String POST = "/post";
-    String POST_ID = "postId";
 
     /**
      * URL User

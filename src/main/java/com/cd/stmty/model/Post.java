@@ -1,7 +1,9 @@
 package com.cd.stmty.model;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name="post")
@@ -9,27 +11,30 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
-    private Long postId;
+    private Long id;
 
     @Column(name = "title")
     private String title;
 
-    @Column(name = "description", columnDefinition = "text")
+    @Column(name = "description")
+    @Type(type = "text")
     private String description;
 
+    @Column(name = "department_no", nullable = false)
+    private int departmentNo;
+
     @Column(name = "create_date")
-    private LocalDateTime createDate = LocalDateTime.now();
+    private Date createDate;
 
     @Column(name = "update_date")
-    private LocalDateTime updateDate = LocalDateTime.now();
+    private Date updateDate;
 
-    public Long getPostId() {
-        return postId;
+    public Long getId() {
+        return id;
     }
 
-    public void setPostId(Long postId) {
-        this.postId = postId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -48,19 +53,27 @@ public class Post {
         this.description = description;
     }
 
-    public LocalDateTime getCreateDate() {
+    public int getDepartmentNo() {
+        return departmentNo;
+    }
+
+    public void setDepartmentNo(int departmentNo) {
+        this.departmentNo = departmentNo;
+    }
+
+    public Date getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(LocalDateTime createDate) {
+    public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 
-    public LocalDateTime getUpdateDate() {
+    public Date getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(LocalDateTime updateDate) {
+    public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
 }
