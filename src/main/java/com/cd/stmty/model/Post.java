@@ -3,6 +3,8 @@ package com.cd.stmty.model;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+
+import java.sql.Blob;
 import java.util.Date;
 
 @Entity
@@ -21,7 +23,7 @@ public class Post {
     private String description;
 
     @Column(name = "image_path")
-    private String imagePath;
+    private Blob imagePath;
 
     @Column(name = "department_no", nullable = false)
     private int departmentNo;
@@ -56,15 +58,15 @@ public class Post {
         this.description = description;
     }
 
-    public String getImagePath() {
-        return imagePath;
-    }
+    public Blob getImagePath() {
+		return imagePath;
+	}
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
+	public void setImagePath(Blob imagePath) {
+		this.imagePath = imagePath;
+	}
 
-    public int getDepartmentNo() {
+	public int getDepartmentNo() {
         return departmentNo;
     }
 

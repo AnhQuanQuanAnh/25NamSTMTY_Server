@@ -1,12 +1,16 @@
 package com.cd.stmty.services.impl;
 
+import com.cd.stmty.exception.StmtyException;
 import com.cd.stmty.model.BaseListRequest;
 import com.cd.stmty.model.Post;
 import com.cd.stmty.repository.PostRepository;
 import com.cd.stmty.services.PostService;
 import com.cd.stmty.util.Const;
+import com.cd.stmty.util.ObjectUtil;
 import com.cd.stmty.util.StringUtil;
 import com.cd.stmty.util.UriParam;
+import com.cd.stmty.util.UtilBase64Image;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Date;
-import java.util.Base64;
 
 @Component
 public class PostServiceImpl implements PostService {
@@ -35,11 +34,6 @@ public class PostServiceImpl implements PostService {
             LOGGER.info(Const.LOG_BEGIN_SERVICE + UriParam.LIST);
             PageRequest pageRequest = request.createPageRequest(UriParam.ID);
             Page<Post> posts = postRepository.findAll(pageRequest);
-//            posts.forEach(post -> {
-//                String imagePath = post.getImagePath();
-//                String base64Image = UtilBase64Image.encoder(imagePath);
-//                UtilBase64Image.decoder(base64Image, imagePath);
-//            });
             LOGGER.debug(posts.toString());
             return posts;
         } finally {
@@ -52,18 +46,7 @@ public class PostServiceImpl implements PostService {
         try {
             LOGGER.info(Const.LOG_BEGIN_SERVICE + UriParam.INSERT);
             if (!StringUtil.isEmpty(post.getImagePath())) {
-                File file = new File(post.getImagePath());
-                try (FileInputStream imageInFile = new FileInputStream(file)) {
-                    // Reading a Image file from file system
-                    byte imageData[] = new byte[(int) file.length()];
-                    imageInFile.read(imageData);
-                    String base64Image = Base64.getEncoder().encodeToString(imageData);
-                    post.setImagePath(base64Image);
-                } catch (FileNotFoundException e) {
-                    System.out.println("Image not found" + e);
-                } catch (IOException ioe) {
-                    System.out.println("Exception while reading the Image " + ioe);
-                }
+            	post.setImagePath(UtilBase64Image.encoder(post.getImagePath()));
             }
             post.setCreateDate(new Date());
             post.setUpdateDate(new Date());
@@ -79,8 +62,18 @@ public class PostServiceImpl implements PostService {
     public Post update(Post post) {
         try {
             LOGGER.info(Const.LOG_BEGIN_SERVICE + UriParam.UPDATE);
-            post.setUpdateDate(new Date());
-            Post result = postRepository.save(post);
+            if (ObjectUtil.isEmpty(post.getId())) {
+            	throw new StmtyException("Id is not empty");
+            }
+            Post postUpdated = postRepository.findPostById(post.getId());
+            postUpdated.setDepartmentNo(post.getDepartmentNo());
+            postUpdated.setTitle(post.getTitle());
+            postUpdated.setDescription(post.getDescription());
+            if (!StringUtil.isEmpty(post.getImagePath())) {
+            	postUpdated.setImagePath(UtilBase64Image.encoder(post.getImagePath()));
+            }
+            postUpdated.setUpdateDate(new Date());
+            Post result = postRepository.save(postUpdated);
             LOGGER.debug(result.toString());
             return result;
         } finally {
