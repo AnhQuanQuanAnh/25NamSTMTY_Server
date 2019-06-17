@@ -5,7 +5,9 @@ import com.cd.stmty.model.Post;
 import com.cd.stmty.repository.PostRepository;
 import com.cd.stmty.services.PostService;
 import com.cd.stmty.util.Const;
+import com.cd.stmty.util.StringUtil;
 import com.cd.stmty.util.UriParam;
+import com.cd.stmty.util.UtilBase64Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,11 @@ public class PostServiceImpl implements PostService {
             LOGGER.info(Const.LOG_BEGIN_SERVICE + UriParam.LIST);
             PageRequest pageRequest = request.createPageRequest(UriParam.ID);
             Page<Post> posts = postRepository.findAll(pageRequest);
+//            posts.forEach(post -> {
+//                String imagePath = post.getImagePath();
+//                String base64Image = UtilBase64Image.encoder(imagePath);
+//                UtilBase64Image.decoder(base64Image, imagePath);
+//            });
             LOGGER.debug(posts.toString());
             return posts;
         } finally {
@@ -40,6 +47,10 @@ public class PostServiceImpl implements PostService {
     public Post insert(Post post) {
         try {
             LOGGER.info(Const.LOG_BEGIN_SERVICE + UriParam.INSERT);
+            if (!StringUtil.isEmpty(post.getImagePath())) {
+                System.out.print("Image path " + post.getImagePath().toString());
+                post.setImagePath(UtilBase64Image.encoder(post.getImagePath()));
+            }
             post.setCreateDate(new Date());
             post.setUpdateDate(new Date());
             Post result = postRepository.save(post);

@@ -20,6 +20,9 @@ public class Post {
     @Type(type = "text")
     private String description;
 
+    @Column(name = "image_path")
+    private String imagePath;
+
     @Column(name = "department_no", nullable = false)
     private int departmentNo;
 
@@ -51,6 +54,14 @@ public class Post {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public int getDepartmentNo() {
