@@ -7,7 +7,6 @@ import com.cd.stmty.services.PostService;
 import com.cd.stmty.util.Const;
 import com.cd.stmty.util.StringUtil;
 import com.cd.stmty.util.UriParam;
-import com.cd.stmty.util.UtilBase64Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Date;
+import java.util.Base64;
 
 @Component
 public class PostServiceImpl implements PostService {
@@ -48,8 +52,18 @@ public class PostServiceImpl implements PostService {
         try {
             LOGGER.info(Const.LOG_BEGIN_SERVICE + UriParam.INSERT);
             if (!StringUtil.isEmpty(post.getImagePath())) {
-                System.out.print("Image path " + post.getImagePath().toString());
-                post.setImagePath(UtilBase64Image.encoder(post.getImagePath()));
+                File file = new File(post.getImagePath());
+                try (FileInputStream imageInFile = new FileInputStream(file)) {
+                    // Reading a Image file from file system
+                    byte imageData[] = new byte[(int) file.length()];
+                    imageInFile.read(imageData);
+                    String base64Image = Base64.getEncoder().encodeToString(imageData);
+                    post.setImagePath(base64Image);
+                } catch (FileNotFoundException e) {
+                    System.out.println("Image not found" + e);
+                } catch (IOException ioe) {
+                    System.out.println("Exception while reading the Image " + ioe);
+                }
             }
             post.setCreateDate(new Date());
             post.setUpdateDate(new Date());
