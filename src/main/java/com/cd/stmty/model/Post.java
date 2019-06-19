@@ -22,8 +22,9 @@ public class Post {
     @Type(type = "text")
     private String description;
 
-    @Column(name = "image_path")
-    private Blob imagePath;
+    @Column(name = "image")
+    @Type(type = "text")
+    private String image;
 
     @Column(name = "department_no", nullable = false)
     private int departmentNo;
@@ -58,15 +59,15 @@ public class Post {
         this.description = description;
     }
 
-    public Blob getImagePath() {
-		return imagePath;
-	}
+    public String getImage() {
+        return image;
+    }
 
-	public void setImagePath(Blob imagePath) {
-		this.imagePath = imagePath;
-	}
+    public void setImage(String image) {
+        this.image = image;
+    }
 
-	public int getDepartmentNo() {
+    public int getDepartmentNo() {
         return departmentNo;
     }
 

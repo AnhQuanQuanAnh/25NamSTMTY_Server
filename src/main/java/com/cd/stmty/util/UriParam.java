@@ -13,7 +13,7 @@ public interface UriParam {
     String INSERT = "/insert";
     String UPDATE = "/update";
     String DELETE = "/delete";
-    String GET_WITH_ID = "/%s";
+//    String GET_WITH_ID = "/%s";
     String DOWNLOAD = "/download";
     String IMPORT = "/import";
     String READ_CSV = "/read-csv";
@@ -30,6 +30,7 @@ public interface UriParam {
      * URL Post
      */
     String POST = "/post";
+    String GET_WITH_ID = "/tin-tuc/{id}";
 
     /**
      * URL User

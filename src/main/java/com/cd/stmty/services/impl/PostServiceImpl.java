@@ -45,8 +45,8 @@ public class PostServiceImpl implements PostService {
     public Post insert(Post post) {
         try {
             LOGGER.info(Const.LOG_BEGIN_SERVICE + UriParam.INSERT);
-            if (!StringUtil.isEmpty(post.getImagePath())) {
-            	post.setImagePath(UtilBase64Image.encoder(post.getImagePath()));
+            if (!StringUtil.isEmpty(post.getImage())) {
+            	post.setImage(UtilBase64Image.encoder(post.getImage()));
             }
             post.setCreateDate(new Date());
             post.setUpdateDate(new Date());
@@ -69,8 +69,8 @@ public class PostServiceImpl implements PostService {
             postUpdated.setDepartmentNo(post.getDepartmentNo());
             postUpdated.setTitle(post.getTitle());
             postUpdated.setDescription(post.getDescription());
-            if (!StringUtil.isEmpty(post.getImagePath())) {
-            	postUpdated.setImagePath(UtilBase64Image.encoder(post.getImagePath()));
+            if (!StringUtil.isEmpty(post.getImage())) {
+            	postUpdated.setImage(UtilBase64Image.encoder(post.getImage()));
             }
             postUpdated.setUpdateDate(new Date());
             Post result = postRepository.save(postUpdated);
@@ -85,11 +85,28 @@ public class PostServiceImpl implements PostService {
     public void delete(Long id) {
         try {
             LOGGER.info(Const.LOG_BEGIN_SERVICE + UriParam.DELETE);
-            if (id != null){
+            if (ObjectUtil.isNotEmpty(id)){
                 postRepository.deleteById(id);
             }
         } finally {
             LOGGER.info(Const.LOG_END_SERVICE + UriParam.DELETE);
+        }
+    }
+
+    @Override
+    public Post getById(Long id) {
+        try {
+            LOGGER.info(Const.LOG_BEGIN_SERVICE + UriParam.GET_WITH_ID);
+            Post post = null;
+            if (ObjectUtil.isNotEmpty(id)){
+                post = postRepository.findPostById(id);
+                if (ObjectUtil.isEmpty(post)) {
+                    throw new StmtyException("No data");
+                }
+            }
+            return post;
+        } finally {
+            LOGGER.info(Const.LOG_END_SERVICE + UriParam.GET_WITH_ID);
         }
     }
 

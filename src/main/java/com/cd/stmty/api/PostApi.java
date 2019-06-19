@@ -4,10 +4,7 @@ import com.cd.stmty.model.ApiResponse;
 import com.cd.stmty.model.BaseListRequest;
 import com.cd.stmty.model.Post;
 import com.cd.stmty.util.UriParam;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 
 @RestController
@@ -25,4 +22,7 @@ public interface PostApi {
 
     @RequestMapping(value = UriParam.DELETE, method = RequestMethod.POST)
     ApiResponse<Boolean> delete(Long postId);
+
+    @RequestMapping(value = UriParam.GET_WITH_ID, method = RequestMethod.GET)
+    ApiResponse<Post> getById(@PathVariable(value = UriParam.ID) Long id);
 }
